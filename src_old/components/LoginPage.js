@@ -2,15 +2,14 @@ import React from 'react';
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { userActions } from '../actions'
 
-import { userActions } from '../actions';
-
-export class LoginPage extends Component {
+class LoginPage extends Component {
     constructor(props) {
         super(props);
 
         // reset login status
-        // this.props.dispatch(userActions.logout());
 
         this.state = {
             username: '',
@@ -24,49 +23,57 @@ export class LoginPage extends Component {
 
     handleChange(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        if(name){
+            if(name === 'username'){
+               this.setState({
+                   username: value
+               }) 
+            }
+            if(name === 'password'){
+               this.setState({
+                   password: value
+               }) 
+            }
+        }
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log('props',  this.props)
-        this.setState({ submitted: true });
         const { username, password } = this.state;
-        // const { dispatch } = this.props;
-        if (username && password) {
-            this.props.userActionsFn(username, password);
+        if(username && password){
+            console.log(this.props)
+            this.props.loginUser(username, password);
+        }else {
+            
         }
+        this.setState({
+            submitted: true
+        })
+      
     }
 
     render() {
-        const { loggingIn } = this.props;
         const { username, password, submitted } = this.state;
-
         return (
             <div className="col-md-6 col-md-offset-3">
                 <h2>Login</h2>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
                         <label htmlFor="username">Username</label>
-                        <input type="text" className="form-control username" 
-                                name="username" 
-                                onChange={this.handleChange} />
+                        <input onChange={this.handleChange} type="text" className="form-control username" name="username" />
                         {submitted && !username &&
                             <div className="help-block">Username is required</div>
                         }
                     </div>
                     <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
                         <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" 
-                                name="password"
-                                onChange={this.handleChange} />
+                        <input onChange={this.handleChange} type="password" className="form-control" name="password"/>
                         {submitted && !password &&
                             <div className="help-block">Password is required</div>
                         }
                     </div>
                     <div className="form-group">
                         <button className="btn btn-primary">Login</button>
-                        <Link to="/register" className="btn btn-link">Register</Link>
                     </div>
                 </form>
             </div>
@@ -75,21 +82,15 @@ export class LoginPage extends Component {
 }
 
 function mapStateToProps(state) {
-    const { username, password, submitted } = state;
-    return {
-        username, password, submitted
-    };
+    return { };
 }
 
-// export { LoginPage as TestLoginPage };
-
-const mapDispatchToProps = (dispatch) => {
+function mapDispatchToProps(dispatch) {
     return {
-        userActionsFn: (data) => {
-            dispatch(userActions.login(data))
-        }
+        loginUser: bindActionCreators(userActions.login, dispatch)
     }
+
 }
 
-const TestLoginPage = connect(mapStateToProps, mapDispatchToProps)(LoginPage)
-export default TestLoginPage;
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+

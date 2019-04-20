@@ -4,15 +4,12 @@ import { Provider } from 'react-redux';
 
 import { store } from './helpers';
 import { App } from './App';
-import { configureFakeAPI } from './helpers';
 
-window.store = store;
+import { configureFakeAPI } from './helpers';
 
 configureFakeAPI();
 
 render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
+        <App />,
     document.getElementById('app')
 );
