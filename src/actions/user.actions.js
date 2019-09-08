@@ -12,35 +12,36 @@ export const userActions = {
 function login(username, password) {
     // return the promise using fetch which adds to localstorage on resolve
     return dispatch => {
-        dispatch(request({ username }));
+        dispatch(request({ username, password }));
 
         userService.login(username, password)
             .then(
-                user => { 
+                user => {
                     dispatch(success(user));
                     history.push('/');
                 },
                 error => {
+                    console.log("err", error)
                     dispatch(failure(error));
                     dispatch(alertActions.error(error));
                 }
             );
     };
 
-    function request(user) { 
-        return { 
-            type: userConstants.LOGIN_REQUEST, user 
-        } 
+    function request(user) {
+        return {
+            type: userConstants.LOGIN_REQUEST, user
+        }
     }
-    function success(user) { 
-        return { 
-            type: userConstants.LOGIN_SUCCESS, user 
-        } 
+    function success(user) {
+        return {
+            type: userConstants.LOGIN_SUCCESS, user
+        }
     }
-    function failure(error) { 
-        return { 
-            type: userConstants.LOGIN_FAILURE, error 
-        } 
+    function failure(error) {
+        return {
+            type: userConstants.LOGIN_FAILURE, error
+        }
     }
 }
 
@@ -57,7 +58,7 @@ function register(user) {
 
         userService.register(user)
             .then(
-                user => { 
+                user => {
                     dispatch(success());
                     history.push('/login');
                     dispatch(alertActions.success('Registration successful'));
@@ -69,22 +70,22 @@ function register(user) {
             );
     };
 
-    function request(user) { 
-        return { 
-            type: userConstants.REGISTER_REQUEST, 
-            user 
-        } 
-    }
-    function success(user) { 
-        return { 
-            type: userConstants.REGISTER_SUCCESS, 
-            user 
-        } 
-    }
-    function failure(error) { 
+    function request(user) {
         return {
-             type: userConstants.REGISTER_FAILURE, 
-             error 
-        } 
+            type: userConstants.REGISTER_REQUEST,
+            user
+        }
+    }
+    function success(user) {
+        return {
+            type: userConstants.REGISTER_SUCCESS,
+            user
+        }
+    }
+    function failure(error) {
+        return {
+            type: userConstants.REGISTER_FAILURE,
+            error
+        }
     }
 }

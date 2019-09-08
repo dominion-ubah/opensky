@@ -3,37 +3,33 @@ import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { PrivateRoute } from './PrivateRoute.js';
 import { history } from './helpers';
-import { alertActions } from './actions';
 import { HomePage } from './components/HomePage';
 import { LoginPage } from './components/LoginPage';
-import { RegisterPage } from './components/RegisterPage';
 
 export class App extends React.Component {
     constructor(props) {
         super(props);
-        // const { dispatch } = this.props;
-        // history.listen((location, action) => {
-        //     // clear alert on location change
-        //     dispatch(alertActions.clear());
-        // });
+        history.listen((location, action) => {
+            // clear alert on location change
+            // dispatch(alertActions.clear());
+        });
 
-        // const { dispatch } = this.props;
-        // history.listen((location, action) => {
-        // });
+        history.listen((location, action) => {
+        });
     }
 
     render() {
         const { alert } = this.props;
+        console.log("alert", alert)
         return (
-              <div className="container">                    
-                    <Router history={history}>
-                        <div>
-                            <PrivateRoute exact path="/" component={HomePage} />
-                            <Route path="/login" component={LoginPage} />
-                            <Route path="/register" component={RegisterPage} />
-                        </div>
-                    </Router>
-              </div>
+            <div className="container">
+                <Router history={history}>
+                    <div>
+                        <PrivateRoute exact path="/" component={HomePage} />
+                        <Route path="/login" component={LoginPage} />
+                    </div>
+                </Router>
+            </div>
         );
     }
 }
@@ -45,6 +41,7 @@ function mapStateToProps(state) {
     };
 }
 
-{/* <div className="col-sm-8 col-sm-offset-2">
-                              <LoginPage />
-                  </div> */}
+
+
+
+export default connect(mapStateToProps)(App)

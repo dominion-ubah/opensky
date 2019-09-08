@@ -1,4 +1,9 @@
-let users = JSON.parse(localStorage.getItem('users')) || [];
+let users = [
+    {
+        username: "demo",
+        password: "demo"
+    }
+];
 
 export function configureFakeAPI() {
     let realFetch = window.fetch;
@@ -10,6 +15,7 @@ export function configureFakeAPI() {
                     let params = JSON.parse(opts.body);
 
                     let filteredUsers = users.filter(user => {
+                        console.log('log', user, params)
                         return user.username === params.username && user.password === params.password;
                     });
                     if (filteredUsers.length) {
