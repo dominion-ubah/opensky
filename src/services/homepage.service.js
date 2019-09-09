@@ -3,7 +3,8 @@ import { userService } from './user.service';
 
 export const homeService = {
     getStates,
-    getOneState,
+    getArrivalByAirport,
+    getDepartureByAirport
 };
 
 function getStates() {
@@ -29,16 +30,63 @@ function getStates() {
 
 
 
-function getOneState(id) {
+function getArrivalByAirport(endtime, icao) {
+
+
     const requestOptions = {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        credentials: 'same-origin',
+        redirect: 'follow',
+        agent: null,
+        headers: {
+            // "Content-Type": "text/plain",
+            'Authorization': 'Basic ' + btoa('demo:demo'),
+        },
+        // method: 'GET',
+        // headers: { 'Content-Type': 'application/json' }
     };
+    let timeSt = new Date().setMinutes(new Date().getMinutes() - endtime)
+    const secondsSinceEpoch = Math.round(timeSt / 1000)
+    const dsecondsSinceEpoch = Math.round(Date.now() / 1000)
+
+    console.log("new stuffxx", timeSt, icao, Date.now())
     // call `/users/authenticate` with requestOptions to authenticate the login process
-    return fetch(`${BASE_API_URL.baseDev}state/${id}`, requestOptions)
-        .then(handleResponse)
+    // return fetch(`https://opensky-network.org/api/flights/arrival?airport=${icao}&begin=${timeSt}&end=${Date.now()}`, requestOptions)
+    return fetch('https://opensky-network.org/api/flights/arrival?airport=' + icao + '&begin=' + parseInt(secondsSinceEpoch) + '&end=' + parseInt(dsecondsSinceEpoch), requestOptions)
+        .then(res => res.clone().json())
         .then(data => {
-            console.log('us', data)
+            console.log('json arrival', data)
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+
+            return data;
+        });
+}
+function getDepartureByAirport(endtime, icao) {
+
+
+    const requestOptions = {
+        method: 'GET',
+        credentials: 'same-origin',
+        redirect: 'follow',
+        agent: null,
+        headers: {
+            // "Content-Type": "text/plain",
+            'Authorization': 'Basic ' + btoa('demo:demo'),
+        },
+        // method: 'GET',
+        // headers: { 'Content-Type': 'application/json' }
+    };
+    let timeSt = new Date().setMinutes(new Date().getMinutes() - endtime)
+    const secondsSinceEpoch = Math.round(timeSt / 1000)
+    const dsecondsSinceEpoch = Math.round(Date.now() / 1000)
+
+    console.log("new stuffxx", timeSt, icao, Date.now())
+    // call `/users/authenticate` with requestOptions to authenticate the login process
+    // return fetch(`https://opensky-network.org/api/flights/arrival?airport=${icao}&begin=${timeSt}&end=${Date.now()}`, requestOptions)
+    return fetch('https://opensky-network.org/api/flights/departure?airport=' + icao + '&begin=' + parseInt(secondsSinceEpoch) + '&end=' + parseInt(dsecondsSinceEpoch), requestOptions)
+        .then(res => res.clone().json())
+        .then(data => {
+            console.log('json dept', data)
             // store user details and jwt token in local storage to keep user logged in between page refreshes
 
             return data;
